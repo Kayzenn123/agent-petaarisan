@@ -1,0 +1,409 @@
+/* PETA ARISAN — hari 13 · risograph 3 tinta · HANYA 3 ukuran font */
+@font-face{
+  font-family:"Playwrite HR Lijeva";font-style:normal;font-weight:400;font-display:swap;
+  src:url("fonts/playwrite-hr-lijeva-latin-400-normal.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Anek Bangla";font-style:normal;font-weight:400;font-display:swap;
+  src:url("fonts/anek-bangla-latin-400-normal.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Anek Bangla";font-style:normal;font-weight:700;font-display:swap;
+  src:url("fonts/anek-bangla-latin-700-normal.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Mansalva";font-style:normal;font-weight:400;font-display:swap;
+  src:url("fonts/mansalva-latin-400-normal.woff2") format("woff2");
+}
+
+:root{
+  --bg:oklch(0.17 0.033 35);
+  --surface:oklch(0.21 0.040 35);
+  --surface-2:oklch(0.24 0.045 35);
+  --text:oklch(0.94 0.020 35);
+  --muted:oklch(0.78 0.030 35); /* 4.79:1 thd bg — lolos AA teks normal */
+  --accent:oklch(0.68 0.237 215);
+  --accent2:oklch(0.65 0.150 215);
+  --pop:oklch(0.79 0.271 191);
+  --accent-ink:oklch(0.78 0.170 215);
+  --f-s:1rem;
+  --f-m:1.5rem;
+  --f-l:clamp(3rem,9vw,5.5rem);
+  --rad:14px;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  --halftone:radial-gradient(circle, oklch(0.65 0.150 215 / 0.16) 1.6px, transparent 1.7px);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:"Anek Bangla",system-ui,sans-serif;font-size:var(--f-s);line-height:1.55;
+  overflow:hidden;-webkit-tap-highlight-color:transparent;
+}
+body::after{ /* grain global */
+  content:"";position:fixed;inset:0;z-index:200;pointer-events:none;
+  background-image:var(--grain);opacity:.08;
+}
+h1,h2{font-family:"Playwrite HR Lijeva",cursive;font-weight:400;margin:0;line-height:1.2}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--pop);outline-offset:2px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{
+  position:fixed;top:-60px;left:12px;z-index:400;background:var(--pop);color:#14100b;
+  padding:.6rem 1rem;border-radius:10px;font-weight:700;text-decoration:none;transition:top .2s;
+  min-height:44px;display:inline-flex;align-items:center;
+}
+.skip:focus{top:12px}
+.ic{width:1.35em;height:1.35em;flex:none;vertical-align:-.28em}
+.ic-lg{width:2.2em;height:2.2em}
+
+/* misregister risograph */
+.riso{position:relative;display:inline-block}
+.riso::before,.riso::after{
+  content:attr(data-text);position:absolute;inset:0;pointer-events:none;aria-hidden:true;
+}
+.riso::before{color:var(--accent);transform:translate(-2px,1px);z-index:-1;opacity:.85}
+.riso::after{color:var(--pop);transform:translate(2px,-1px);z-index:-2;opacity:.6}
+
+#app{height:100dvh;display:flex;flex-direction:column;opacity:0}
+#app.siap{opacity:1;transition:opacity .4s}
+
+/* ============ INTRO ============ */
+#intro{position:fixed;inset:0;z-index:300;background:var(--bg);overflow:hidden;cursor:pointer}
+.intro-layer{position:absolute;inset:-12%;will-change:transform}
+.l-grain{background-image:var(--grain);opacity:.28;animation:introFade 1.1s ease-in .7s both}
+.l-halftone{background-image:var(--halftone);background-size:16px 16px;opacity:.8;animation:introFade 1.1s ease-in .95s both}
+.l-dots{
+  background-image:radial-gradient(circle, oklch(0.79 0.271 191 / .5) 2.5px, transparent 3px);
+  background-size:90px 90px;opacity:.5;animation:introFade 1.1s ease-in 1.2s both;
+}
+.l-word{display:flex;flex-direction:column;align-items:center;justify-content:center;inset:0;animation:izoom 1.5s ease-in .8s both}
+.kocok{
+  font-family:"Playwrite HR Lijeva",cursive;font-size:var(--f-l);line-height:1;
+  color:var(--text);position:relative;perspective:600px;white-space:nowrap;
+}
+.kocok .ch{display:inline-block;opacity:0;animation:charFlip .5s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i)*80ms + 250ms)}
+.kocok.riso::before,.kocok.riso::after{font-size:inherit}
+.intro-sub{font-size:var(--f-s);color:var(--muted);margin:1.2rem 0 0;letter-spacing:.06em}
+.l-head{display:flex;align-items:center;justify-content:center;inset:0;opacity:0;animation:headIn 1s ease-out 1.5s both}
+.intro-head{
+  font-family:"Mansalva",cursive;font-size:var(--f-m);color:var(--pop);
+  border:3px solid var(--pop);border-radius:12px;padding:.7rem 1.4rem;transform:rotate(-4deg);
+  background:oklch(0.17 0.033 35 / .7);
+}
+.intro-skip{
+  position:absolute;bottom:calc(1.2rem + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+  background:var(--surface);border:2px solid var(--muted);color:var(--text);
+  min-height:44px;padding:.55rem 1.3rem;border-radius:999px;z-index:2;
+}
+@keyframes charFlip{from{transform:rotateX(-92deg) translateY(.35em);opacity:0}60%{opacity:1}to{transform:rotateX(0);opacity:1}}
+@keyframes izoom{from{transform:scale(1)}to{transform:scale(3.4);opacity:0}}
+@keyframes introFade{to{opacity:0}}
+@keyframes headIn{from{opacity:0;transform:scale(.7) rotate(3deg)}to{opacity:1;transform:scale(1.15) rotate(-4deg)}}
+#intro.done{animation:introOut .45s ease-in both;pointer-events:none}
+@keyframes introOut{to{transform:scale(2.2);opacity:0}}
+
+/* ============ TOPBAR ============ */
+#topbar{
+  display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;
+  padding:.55rem .9rem;background:var(--bg);
+  border-bottom:2px solid oklch(0.65 0.150 215 / .35);
+  z-index:60;position:relative;
+}
+.brand{display:flex;align-items:center;gap:.6rem;margin-right:auto}
+.brand .ic-lg{color:var(--accent)}
+.brand h1{font-size:var(--f-m)}
+.tag-contoh{
+  font-family:"Mansalva",cursive;font-size:var(--f-s);color:var(--pop);
+  border:2px solid var(--pop);border-radius:8px;padding:.05rem .55rem;transform:rotate(-3deg);
+}
+.top-ctrl{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.cari-wrap{
+  display:flex;align-items:center;gap:.4rem;background:var(--surface);
+  border:2px solid oklch(0.65 0.150 215 / .5);border-radius:999px;padding:.3rem .8rem;min-height:44px;
+}
+.cari-wrap .ic{color:var(--accent-ink)}
+.cari-wrap input{
+  background:none;border:0;color:var(--text);font:inherit;min-width:0;width:8.5rem;min-height:44px;
+}
+.cari-wrap input::placeholder{color:var(--muted)}
+.cari-wrap input:focus{outline:none}
+.cari-wrap:focus-within{border-color:var(--accent)}
+.iconbtn{
+  min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  background:var(--surface);border:2px solid oklch(0.65 0.150 215 / .5);border-radius:12px;cursor:pointer;
+  color:var(--text);
+}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent-ink)}
+.iconbtn.toggle[aria-pressed="false"]{opacity:.45;border-style:dashed}
+
+/* ============ PETA ============ */
+#peta-wrap{flex:1;display:flex;flex-direction:column;min-height:0;position:relative}
+#peta{flex:1;position:relative;overflow:hidden;touch-action:none;cursor:grab;background:var(--bg)}
+#peta:active{cursor:grabbing}
+#stage{position:absolute;top:0;left:0;width:0;height:0;transform-origin:0 0;will-change:transform}
+#world{position:absolute;top:0;left:0;width:2200px;height:1500px}
+.world-halftone{
+  position:absolute;inset:0;background-image:var(--halftone);background-size:26px 26px;opacity:.5;pointer-events:none;
+}
+#wilayah{
+  position:absolute;width:560px;height:560px;border:3px dashed oklch(0.79 0.271 191 / .55);
+  border-radius:50%;pointer-events:none;display:flex;align-items:flex-start;justify-content:center;
+}
+#wilayah-label{
+  font-family:"Mansalva",cursive;font-size:var(--f-s);color:var(--pop);
+  background:var(--bg);padding:.1rem .8rem;border-radius:999px;margin-top:-1rem;white-space:nowrap;
+}
+#stamps{position:absolute;inset:0}
+.stamp{
+  position:absolute;top:0;left:0;width:76px;height:76px;margin:-38px 0 0 -38px;
+  background:none;border:0;padding:0;cursor:pointer;will-change:transform;
+}
+.stamp-in{
+  width:100%;height:100%;border-radius:50%;
+  border:3px solid var(--accent);color:var(--text);
+  background:radial-gradient(circle at 35% 30%, oklch(0.26 0.05 35), var(--surface));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  transform:rotate(var(--rot,0deg)) scale(0);
+  box-shadow:2px 3px 0 oklch(0.65 0.150 215 / .6);
+  transition:transform .25s;
+}
+.stamp.on .stamp-in{animation:stampPop .45s cubic-bezier(.2,1.6,.4,1) both;animation-delay:var(--d,0s)}
+.stamp .no{font-family:"Playwrite HR Lijeva",cursive;font-size:var(--f-m);line-height:1;color:var(--accent-ink)}
+.stamp .nm{font-size:var(--f-s);line-height:1.1;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stamp:hover .stamp-in,.stamp:focus-visible .stamp-in{border-color:var(--pop)}
+.stamp.lunas .stamp-in{border-color:var(--pop)}
+.stamp.lunas .no{color:var(--pop)}
+.stamp.pemenang .stamp-in{border-color:var(--pop);border-width:4px}
+.stamp.pemenang::after{ /* cap ganda */
+  content:"";position:absolute;inset:6px;border-radius:50%;
+  border:2px solid var(--pop);transform:rotate(6deg) translate(3px,-2px);opacity:.85;pointer-events:none;
+}
+.stamp.dim{opacity:.14;pointer-events:none}
+@keyframes stampPop{from{transform:rotate(var(--rot,0deg)) scale(0)}to{transform:rotate(var(--rot,0deg)) scale(1)}}
+.map-hint{
+  position:absolute;top:.7rem;left:50%;transform:translateX(-50%);
+  font-size:var(--f-s);color:var(--muted);background:oklch(0.17 0.033 35 / .8);
+  padding:.25rem .9rem;border-radius:999px;pointer-events:none;white-space:nowrap;
+  transition:opacity .5s;
+}
+.map-hint.hide{opacity:0}
+
+/* ============ MARQUEE (overlay di dasar peta) ============ */
+#marquee{
+  position:absolute;left:0;right:0;bottom:0;z-index:40;pointer-events:none;
+  border-top:2px solid oklch(0.65 0.150 215 / .35);
+  background:oklch(0.17 0.033 35 / .88);overflow:hidden;
+}
+.band{overflow:hidden;white-space:nowrap;border-bottom:1px dashed oklch(0.65 0.150 215 / .25)}
+.band:last-child{border-bottom:0}
+.track{display:inline-block;padding:.28rem 0;will-change:transform;animation:mq var(--dur,26s) linear infinite}
+.band-2 .track{animation-direction:reverse;--dur:32s}
+.band-3 .track{--dur:22s}
+.track span{font-size:var(--f-s);margin:0 1.1rem;letter-spacing:.04em}
+.band-1 .track span{font-family:"Mansalva",cursive;color:var(--accent-ink)}
+.band-2 .track span{color:var(--muted)}
+.band-3 .track span{color:var(--pop);font-weight:700}
+#marquee.jeda .track{animation-play-state:paused}
+@keyframes mq{from{transform:translateX(0) skewX(var(--skew,0deg))}to{transform:translateX(-50%) skewX(var(--skew,0deg))}}
+
+/* ============ HUD ============ */
+#hud{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  padding:.6rem .9rem calc(.7rem + env(safe-area-inset-bottom));
+  background:var(--bg);border-top:2px solid oklch(0.65 0.150 215 / .35);z-index:60;
+}
+.ronde-chip{
+  display:inline-flex;align-items:center;gap:.5rem;min-height:44px;
+  background:var(--surface-2);border:2px solid var(--accent);border-radius:999px;
+  padding:.4rem 1rem;cursor:pointer;font-weight:700;color:var(--text);
+}
+.ronde-chip .ic{color:var(--accent-ink)}
+.hud-btns{display:flex;gap:.5rem;flex-wrap:wrap;margin-left:auto}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  min-height:44px;padding:.55rem 1.1rem;border-radius:12px;cursor:pointer;
+  background:var(--surface);border:2.5px solid oklch(0.65 0.150 215 / .55);color:var(--text);
+  font-family:"Mansalva",cursive;letter-spacing:.04em;
+  transform:rotate(-.6deg);box-shadow:2px 2px 0 oklch(0.65 0.150 215 / .45);
+}
+.hud-btns .btn:nth-child(even),.ekspor-btns .btn:nth-child(even),.kocok-aksi .btn:nth-child(even){transform:rotate(.7deg)}
+.btn:hover{border-color:var(--accent)}
+.btn:active{transform:rotate(0deg) translate(1px,1px);box-shadow:0 0 0}
+.btn.primer{background:var(--accent);border-color:var(--accent);color:#101c22;transform:rotate(-1deg)}
+.btn.primer:active{transform:rotate(0deg)}
+.btn.bahaya{border-color:var(--pop);color:var(--pop);background:none}
+#legend{
+  margin:0;padding:.3rem .9rem .5rem;font-size:var(--f-s);color:var(--muted);
+  display:flex;align-items:center;gap:.45rem;background:oklch(0.17 0.033 35 / .92);
+}
+#legend .ic{color:var(--pop)}
+
+/* ============ PANEL ============ */
+#panel{
+  position:fixed;z-index:80;inset:auto 0 0 0;display:flex;justify-content:center;
+  pointer-events:none;padding:0 .8rem calc(.8rem + env(safe-area-inset-bottom));
+}
+#panel[hidden]{display:none}
+.panel-card{
+  pointer-events:auto;width:min(430px,100%);max-height:min(72dvh,640px);overflow:auto;
+  background:var(--surface);border:3px solid var(--accent);border-radius:var(--rad);
+  box-shadow:5px 6px 0 oklch(0.65 0.150 215 / .5), 0 18px 60px rgb(0 0 0 / .5);
+  padding:1rem 1.1rem 1.3rem;transform-style:preserve-3d;will-change:transform;
+  animation:panelIn .35s cubic-bezier(.2,1.3,.4,1) both;
+}
+@keyframes panelIn{from{transform:translateY(40px) rotate(-1.5deg);opacity:0}to{transform:none;opacity:1}}
+@media(min-width:900px){
+  #panel{inset:0 0 0 auto;align-items:center;padding:0 1.4rem 0 0}
+  .panel-card{width:400px}
+}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.6rem}
+.panel-head h2{font-size:var(--f-m)}
+.pane-note{color:var(--muted);font-size:var(--f-s);margin:.7rem 0 0}
+.empty{text-align:center;padding:1.2rem .4rem;display:flex;flex-direction:column;align-items:center;gap:.7rem}
+.empty .ic-lg{color:var(--accent)}
+.empty p{margin:0;max-width:26ch}
+
+/* kartu anggota */
+.stamp-big{
+  width:92px;height:92px;border-radius:50%;border:4px solid var(--pop);color:var(--pop);
+  display:flex;align-items:center;justify-content:center;transform:rotate(-5deg);
+  font-family:"Playwrite HR Lijeva",cursive;font-size:var(--f-m);margin:.2rem 0 .6rem;
+  box-shadow:3px 4px 0 oklch(0.65 0.150 215 / .5);
+}
+.anggota-nama{font-family:"Playwrite HR Lijeva",cursive;font-size:var(--f-m);margin:0 0 .5rem}
+.anggota-dl{margin:0;display:grid;gap:.45rem}
+.anggota-dl>div{display:flex;justify-content:space-between;gap:1rem;border-bottom:1px dashed oklch(0.65 0.150 215 / .3);padding-bottom:.4rem}
+.anggota-dl dt{color:var(--muted)}
+.anggota-dl dd{margin:0;font-weight:700;text-align:right}
+.badge-lunas{color:var(--pop)}
+.badge-belum{color:var(--accent-ink)}
+
+/* kalkulator */
+#kalk-form{display:grid;gap:.7rem}
+#kalk-form label{display:grid;gap:.3rem;font-weight:700}
+#kalk-form input,#kalk-form select{
+  font:inherit;color:var(--text);background:var(--bg);border:2px solid oklch(0.65 0.150 215 / .55);
+  border-radius:10px;min-height:48px;padding:.5rem .8rem;width:100%;
+}
+.form-err{color:var(--pop);font-weight:700;margin:.2rem 0 0}
+.kalk-hasil{margin-top:.9rem;border:2px dashed var(--accent);border-radius:12px;padding:.8rem;text-align:center}
+.hasil-angka{font-family:"Playwrite HR Lijeva",cursive;font-size:var(--f-m);color:var(--accent-ink);margin:0}
+
+/* jadwal */
+.jadwal-list{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.jadwal-list li{
+  display:flex;align-items:center;gap:.7rem;background:var(--bg);
+  border:2px solid oklch(0.65 0.150 215 / .4);border-radius:12px;padding:.55rem .8rem;min-height:56px;
+}
+.jadwal-no{
+  font-family:"Mansalva",cursive;font-size:var(--f-s);min-width:44px;min-height:44px;
+  border:2px solid var(--muted);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  color:var(--muted);flex:none;
+}
+.jadwal-list li.sedang{border-color:var(--accent)}
+.jadwal-list li.sedang .jadwal-no{border-color:var(--accent);color:var(--accent-ink)}
+.jadwal-list li.menang .jadwal-no{border-color:var(--pop);color:var(--pop)}
+.jadwal-tx{flex:1;min-width:0}
+.jadwal-tx b{display:block}
+.jadwal-tx small{color:var(--muted)}
+.jadwal-list .btn{min-height:44px;padding:.4rem .9rem}
+
+/* riwayat */
+.riwayat-list{list-style:none;margin:0 0 .8rem;padding:0;display:grid;gap:.5rem}
+.riwayat-list li{
+  display:flex;align-items:center;gap:.7rem;background:var(--bg);
+  border:2px solid oklch(0.65 0.150 215 / .4);border-radius:12px;padding:.55rem .8rem;
+}
+.riwayat-list .tx{flex:1;min-width:0}
+.riwayat-list .tx b{display:block}
+.riwayat-list code{color:var(--accent-ink);font-size:var(--f-s)}
+
+/* ekspor */
+.ekspor-btns{display:flex;gap:.6rem;flex-wrap:wrap;margin:.4rem 0 .8rem}
+.ringkasan{
+  background:var(--bg);border:2px solid oklch(0.65 0.150 215 / .4);border-radius:12px;
+  padding:.8rem;white-space:pre-wrap;font-size:var(--f-s);margin:0;max-height:220px;overflow:auto;
+}
+
+/* ============ MODAL KOCOK ============ */
+#kocok-modal{
+  position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;
+  background:oklch(0.10 0.02 35 / .85);padding:1rem;
+}
+#kocok-modal[hidden]{display:none}
+.kocok-card{
+  width:min(480px,100%);background:var(--surface);border:4px double var(--pop);border-radius:18px;
+  outline:2px solid oklch(0.79 0.271 191 / .6);outline-offset:6px;
+  transform:rotate(-1.5deg);
+  box-shadow:6px 7px 0 oklch(0.65 0.150 215 / .5);padding:1.4rem 1.3rem;text-align:center;
+  animation:panelIn .35s cubic-bezier(.2,1.3,.4,1) both;max-height:90dvh;overflow:auto;
+}
+.kocok-ronde{font-family:"Mansalva",cursive;color:var(--pop);margin:0;letter-spacing:.05em}
+#kocok-title{font-size:var(--f-m);margin:.2rem 0 .4rem}
+.kocok-seed{color:var(--muted);margin:0 0 1rem}
+.kocok-seed code{color:var(--accent-ink);font-size:var(--f-s)}
+.kocok-stage{
+  min-height:120px;display:flex;align-items:center;justify-content:center;
+  border:2px dashed oklch(0.65 0.150 215 / .5);border-radius:14px;margin-bottom:.8rem;overflow:hidden;
+  perspective:700px;background:var(--bg);
+}
+.kocok-nama{font-family:"Playwrite HR Lijeva",cursive;font-size:var(--f-m);padding:.4rem .8rem}
+.kocok-nama.rolling .ch{display:inline-block;animation:nameRoll .28s ease-in-out both}
+.kocok-nama.menang .ch{display:inline-block;opacity:0;animation:charFlip .5s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i)*70ms)}
+.kocok-nama.menang{color:var(--pop)}
+@keyframes nameRoll{0%{transform:rotateX(-80deg);opacity:0}100%{transform:rotateX(0);opacity:1}}
+.kocok-note{color:var(--muted);margin:0 0 1rem}
+.kocok-aksi{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+
+/* ============ TOAST / COIN / LUNAS ============ */
+#toast{
+  position:fixed;left:50%;bottom:calc(9.5rem + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);
+  z-index:150;max-width:min(92vw,480px);background:var(--surface-2);color:var(--text);
+  border:2px solid var(--accent);border-radius:14px;padding:.7rem 1.1rem;
+  opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;text-align:center;
+  box-shadow:4px 5px 0 oklch(0.65 0.150 215 / .4);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast b{color:var(--pop)}
+#coin-rain{position:fixed;inset:0;z-index:160;pointer-events:none;overflow:hidden}
+.coin{position:absolute;top:-60px;color:var(--pop);animation:coinFall linear both}
+.coin .ic{width:2em;height:2em}
+@keyframes coinFall{to{transform:translateY(110vh) rotate(540deg)}}
+#lunas-cap{
+  position:fixed;inset:0;z-index:161;display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+#lunas-cap[hidden]{display:none}
+#lunas-cap span{
+  font-family:"Mansalva",cursive;font-size:var(--f-l);color:var(--pop);
+  border:5px solid var(--pop);border-radius:18px;padding:.6rem 2rem;transform:rotate(-7deg);
+  background:oklch(0.17 0.033 35 / .85);box-shadow:6px 8px 0 oklch(0.65 0.150 215 / .5);
+  animation:capIn .5s cubic-bezier(.2,1.6,.4,1) both;
+}
+@keyframes capIn{from{transform:rotate(-7deg) scale(2.4);opacity:0}to{transform:rotate(-7deg) scale(1);opacity:1}}
+
+/* ============ REDUCED MOTION / MATI ============ */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  #marquee .track{animation:none}
+}
+html.gerak-mati *,html.gerak-mati *::before,html.gerak-mati *::after{
+  animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;
+}
+html.gerak-mati #marquee .track{animation:none}
+html.gerak-mati #intro{display:none}
+html.gerak-mati #app{opacity:1}
+
+@media(max-width:560px){
+  .top-ctrl{flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:none}
+  .top-ctrl::-webkit-scrollbar{display:none}
+  .cari-wrap{flex:none}
+  #hud{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  #hud::-webkit-scrollbar{display:none}
+  .ronde-chip{flex:none}
+  .hud-btns{flex-wrap:nowrap;margin-left:0}
+  .hud-btns .btn{flex:none}
+  .cari-wrap input{width:5.5rem}
+  #legend{font-size:var(--f-s)}
+}
